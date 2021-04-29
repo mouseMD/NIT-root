@@ -1,0 +1,42 @@
+version: '3.1'
+
+services:
+
+  db_test:
+    image: postgres
+    restart: always
+    ports: 
+      - "5432:5432"
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: admin
+      POSTGRES_USER: admin
+      POSTGRES_DB: postgres
+  offers:
+    ports: 
+       - "8001:8001"
+    build: 
+      context: "offers"
+      dockerfile: "docker/Dockerfile"
+    depends_on: 
+      - db_test
+    links: 
+      - db_test
+    environment:
+      DB_URL: postgresql://admin:admin@db_test/offers
+  users:
+    ports: 
+       - "8000:8000"
+    build: 
+      context: "users"
+      dockerfile: "docker/Dockerfile"
+    depends_on: 
+      - db_test
+      - offers
+    links: 
+      - db_test
+      - offers
+    environment:
+      DB_URL: postgresql://admin:admin@db_test/users
+      OFFERS_URL: http://offers:8001/offer
