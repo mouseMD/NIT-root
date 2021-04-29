@@ -119,60 +119,57 @@ paths:
           description: Invalid format
   /offer:
     post:
-      summary: Returns offer information
+      summary: Returns offer information for offer_id or a list of offers for user_id
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                offer_id:
-                  type: integer
+              oneOf:
+                - $ref: '#/components/schemas/Request_offer_id'
+                - $ref: '#/components/schemas/Request_user_id'
       responses:
         '200':
-          description: Json with offer info
+          description: Json with offer info or offers list
           content:
             application/json:
               schema: 
-                type: object
-                properties:
-                  user_id: 
-                    type: integer
-                  title:
-                    type: string
-                  text:
-                    type: string
+                oneOf:
+                  - $ref: '#/components/schemas/Response_offer_info'
+                  - $ref: '#/components/schemas/Response_list_offers'              
         '400':
           description: Invalid format
-  /offer1:
-    post:
-      summary: Returns a list of offers
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                user_id:
-                  type: integer
-      responses:
-        '200':
-          description: A Json array of offers
-          content:
-            application/json:
-              schema: 
-                type: array
-                items: 
-                  type: object
-                  properties:
-                    offer_id:
-                      type: integer
-                    title:
-                      type: integer
-                    text:
-                      type: integer
-        '400':
-          description: Invalid format
+
+components:
+  schemas:
+    Request_offer_id:
+      type: object
+      properties:
+        offer_id:
+          type: integer
+    Request_user_id:
+      type: object
+      properties:
+        user_id:
+          type: integer
+    Response_offer_info:
+      type: object
+      properties:
+        user_id: 
+          type: integer
+        title:
+          type: string
+        text:
+          type: string
+    Response_list_offers:
+      type: array
+      items: 
+        type: object
+        properties:
+          offer_id:
+            type: integer
+          title:
+            type: integer
+          text:
+            type: integer
 
