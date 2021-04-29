@@ -1,0 +1,178 @@
+openapi: 3.0.0
+info:
+  title: users & offers API
+  version: 0.1.0
+servers:
+  - url: http://0.0.0.0
+    description: Local server for testing
+paths:
+  /user/registry:
+    post:
+      summary: Registers a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '201':    
+          description: Successfully created
+        '400':
+          description: Invalid format or user already exists
+  /user/auth:
+    post:
+      summary: Authorizes user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':    
+          description: User successfully autorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user_id:
+                    type: string
+                  token:
+                    type: string
+        '400':
+          description: Invalid format
+        '401':
+          description: Invalid credentials
+  /user/{user_id}:
+    get:
+      summary: Returns all info about user and his offers
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user_info:
+                    type: object
+                    properties:
+                      username:
+                        type: string
+                      email:
+                        type: string
+                  offers:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        offer_id:
+                          type: integer
+                        title:
+                          type: string
+                        text:
+                          type: string
+        '404':
+          description: Invalid user ID 
+  /offer/create:
+    post:
+      summary: Creates a new offer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+                title:
+                  type: string
+                text:
+                  type: string
+      responses:
+        '201':    
+          description: Successfully created
+        '400':
+          description: Invalid format
+  /offer:
+    post:
+      summary: Returns offer information
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                offer_id:
+                  type: integer
+      responses:
+        '200':
+          description: Json with offer info
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  user_id: 
+                    type: integer
+                  title:
+                    type: string
+                  text:
+                    type: string
+        '400':
+          description: Invalid format
+  /offer1:
+    post:
+      summary: Returns a list of offers
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+      responses:
+        '200':
+          description: A Json array of offers
+          content:
+            application/json:
+              schema: 
+                type: array
+                items: 
+                  type: object
+                  properties:
+                    offer_id:
+                      type: integer
+                    title:
+                      type: integer
+                    text:
+                      type: integer
+        '400':
+          description: Invalid format
+

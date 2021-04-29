@@ -40,3 +40,12 @@ services:
     environment:
       DB_URL: postgresql://admin:admin@db_test/users
       OFFERS_URL: http://offers:8001/offer
+  swagger-ui:
+    image: swaggerapi/swagger-ui
+    container_name: swagger-ui
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./swagger:/usr/share/nginx/html/swagger
+    environment:
+      API_URL: swagger/api.yml
